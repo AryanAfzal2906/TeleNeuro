@@ -2,7 +2,8 @@
 
 <p align="center">
   <b>AI-Powered Telemedicine Platform for Early Alzheimer's Detection</b><br/>
-  <i>Final Year Project (FYP) — University of Engineering and Technology, Taxila</i>
+  <i>Alzheimer Disease Detection Using Vision Transformers and MRI Images</i><br/>
+  Joint Final Year Project (BS Computer Science, Session 2022–2026) — University of Engineering and Technology (UET), Taxila
 </p>
 
 <p align="center">
@@ -10,6 +11,7 @@
   <img src="https://img.shields.io/badge/Firebase-Auth%20%7C%20Firestore-FFCA28?logo=firebase&logoColor=black" />
   <img src="https://img.shields.io/badge/Supabase-Storage-3ECF8E?logo=supabase&logoColor=white" />
   <img src="https://img.shields.io/badge/AI%20Model-ViT--B%2F16-orange" />
+  <img src="https://img.shields.io/badge/Accuracy-99.37%25-brightgreen" />
   <img src="https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white" />
   <img src="https://img.shields.io/badge/Project-FYP-blueviolet" />
   <img src="https://img.shields.io/badge/License-MIT-green" />
@@ -25,7 +27,38 @@ The app runs a fine-tuned **Vision Transformer (ViT-B/16)** model — converted 
 
 Patients can upload an MRI scan, receive an instant AI-generated diagnosis report (PDF), book appointments with doctors, chat in real time, and securely share their reports — all within one app.
 
-This project was developed as my **Final Year Project (FYP)** at the **University of Engineering and Technology (UET), Taxila**.
+> **🎓 Joint Final Year Project** — Developed by **Aryan Afzal** and **Malik Anas Ahmed** at the Department of Computer Science, UET Taxila, under the supervision of **Dr. Rabbia Mahum**. See [Team & Contributions](#-team--contributions) for who built what.
+
+---
+
+## 👥 Team & Contributions
+
+| | Aryan Afzal | Malik Anas Ahmed |
+|---|---|---|
+| **Registration No.** | UET/22-CS-89 | UET/22-CS-150 |
+| **Role** | AI & Backend Lead | Mobile Application Lead |
+| **GitHub** | [@AryanAfzal2906](https://github.com/AryanAfzal2906) | — |
+
+### 🤖 Aryan Afzal — AI & Backend Lead
+- **Dataset engineering:** merged the Kaggle Alzheimer's MRI dataset with the OASIS Brain MRI dataset (~120,000 augmented images across 4 classes), cleaned corrupted files and built the 80/20 train/test split.
+- **Preprocessing pipeline:** designed the Resize(256) → CenterCrop(192) → Grayscale→RGB → Resize(224) → ImageNet normalization pipeline, plus rotation (±10°) and affine (5% shift) augmentation. Horizontal flips were intentionally avoided because they can create false structural features in brain MRI.
+- **Model development:** fine-tuned **ViT-B/16** (PyTorch/torchvision) with a custom classification head (Dropout 0.5 + Linear), AdamW (lr 2e-5, weight decay 0.2), label smoothing (0.2), mixed-precision (AMP) training, gradient clipping and early stopping on a Tesla T4 GPU.
+- **Model comparison:** trained and evaluated ViT, Swin Transformer and ConvNeXt, then selected the best-performing model.
+- **Model evaluation:** achieved **99.37% accuracy** and a weighted F1-score of 0.99 on an independent cross-dataset holdout of 1,279 unseen MRI images.
+- **Mobile deployment pipeline:** exported the trained model PyTorch → ONNX → TFLite and validated that the converted model keeps the original diagnostic accuracy.
+- **Backend configuration:** server-side setup and database integration support for the cloud services.
+
+### 📱 Malik Anas Ahmed — Mobile App & Cloud Integration Lead
+- Designed and developed the cross-platform Flutter UI/UX for both the Patient and Doctor portals.
+- Implemented MRI image selection, local preprocessing and state management inside the app.
+- Integrated the on-device TFLite model into the app (UI ↔ inference engine).
+- Implemented Firebase Authentication with role-based access control (Patient vs Doctor).
+- Configured Firestore for real-time chat, appointments and notifications.
+- Built the structured PDF report generation and Supabase storage integration.
+- Led system and user acceptance testing (UAT) of the mobile workflows.
+
+### 🤝 Shared work
+Requirements analysis, system design (use case, activity, sequence, class and architecture diagrams), integration of the AI model with the app, testing and the final FYP report.
 
 ---
 
@@ -36,7 +69,7 @@ This project was developed as my **Final Year Project (FYP)** at the **Universit
 - Browse & search doctors by specialization, sorted by rating
 - Book appointments with date/time picker + problem description
 - Real-time chat with doctors after appointment acceptance
-- **AI MRI Diagnosis** — upload a scan, get instant stage classification + confidence score
+- **AI MRI Diagnosis** — upload a scan, get instant stage classification + confidence score (results below 80% confidence are rejected as unreliable)
 - Auto-generated PDF diagnostic report, saved to personal **Lab Reports** library
 - Share MRI reports selectively with doctors (only those with an accepted appointment)
 - In-app notifications (bookings, messages, session updates, shared reports)
@@ -77,16 +110,31 @@ This project was developed as my **Final Year Project (FYP)** at the **Universit
 
 | | |
 |---|---|
-| **Architecture** | Vision Transformer — `ViT-B/16` (torchvision) |
+| **Architecture** | Vision Transformer — `ViT-B/16` (torchvision, ImageNet-pretrained) |
 | **Task** | 4-class classification: `NonDemented`, `VeryMildDemented`, `MildDemented`, `ModerateDemented` |
-| **Training framework** | PyTorch (mixed-precision / AMP, early stopping) |
-| **Datasets** | [Alzheimer's MRI Dataset](https://www.kaggle.com/datasets/aryanafzal/alzheimers-mri-dataset) + [OASIS Brain MRI Dataset](https://www.kaggle.com/datasets/ninadaithal/imagesoasis) |
+| **Training framework** | PyTorch (mixed-precision / AMP, gradient clipping, early stopping) |
+| **Optimizer / Loss** | AdamW (lr 2e-5, weight decay 0.2) / CrossEntropy with label smoothing 0.2 |
+| **Batch size / Epochs** | 64 / max 50 (early stopping, patience 5) |
+| **Hardware** | NVIDIA Tesla T4 (Kaggle) |
+| **Datasets** | [Alzheimer's MRI Dataset](https://www.kaggle.com/datasets/aryanafzal/alzheimers-mri-dataset) + [OASIS Brain MRI Dataset](https://www.kaggle.com/datasets/ninadaithal/imagesoasis) (~120,000 augmented images, 80/20 split) |
 | **Export pipeline** | PyTorch → ONNX (opset 14) → TFLite (via `ai-edge-torch`) |
 | **On-device runtime** | `tflite_flutter` |
 | **Input** | `224×224×3` RGB tensor, ImageNet-normalized |
 
 **Preprocessing pipeline (must match training exactly):**
 Resize(256) → CenterCrop(192) → Grayscale→RGB → Resize(224) → Normalize(ImageNet mean/std) → CHW
+
+### 📊 Results (cross-dataset holdout, 1,279 unseen MRI images)
+
+| Class | Precision | Recall | F1-Score | Support |
+|---|:---:|:---:|:---:|:---:|
+| MildDemented | 1.00 | 1.00 | 1.00 | 179 |
+| ModerateDemented | 1.00 | 1.00 | 1.00 | 12 |
+| NonDemented | 1.00 | 0.99 | 0.99 | 640 |
+| VeryMildDemented | 0.99 | 1.00 | 0.99 | 448 |
+| **Overall accuracy** | | | **99.37%** | 1,279 |
+
+The only notable confusion is between `NonDemented` and `VeryMildDemented`, the two most clinically similar stages.
 
 The full training/export notebook is documented in `final-fyp.ipynb`.
 
@@ -100,6 +148,7 @@ The full training/export notebook is documented in `final-fyp.ipynb`.
 | Authentication | Firebase Auth |
 | Database | Cloud Firestore (real-time) |
 | File Storage | Supabase Storage (MRI PDFs, images, profile photos) |
+| AI Training | PyTorch, torchvision, timm (Kaggle GPU) |
 | AI Inference | TensorFlow Lite (on-device) |
 | PDF Generation | `pdf` package |
 | State/Local Cache | `shared_preferences` |
@@ -203,25 +252,47 @@ flutter run
 
 ---
 
+## 🔭 Future Work
+
+- 3D Vision Transformer variants for full MRI volumes (NIfTI) instead of 2D slices
+- Explainable AI (attention rollout / heatmaps) to show which brain regions drove a prediction
+- End-to-end encryption of cloud-stored reports and chats (HIPAA/GDPR readiness)
+- Longitudinal tracking of a patient's scans over time
+- More diverse real-world data, especially for the `ModerateDemented` class
+
+---
+
 ## ⚠️ Disclaimer
 
-TeleNeuro is an academic project. Its AI predictions are intended for research and educational purposes only and are **not** a substitute for professional medical diagnosis. Always consult a qualified neurologist.
+TeleNeuro is an academic research project. Its AI predictions are intended for research and educational purposes only and are **not** a substitute for professional medical diagnosis. Always consult a qualified neurologist.
+
+---
+
+## 🙏 Acknowledgements
+
+Supervised by **Dr. Rabbia Mahum**, Department of Computer Science, UET Taxila. Thanks to the department for the academic environment and resources that made this project possible.
 
 ---
 
 ## 📜 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+Copyright © 2026 Aryan Afzal and Malik Anas Ahmed.
 
 ---
 
-## 👨‍💻 Author
+## 👨‍💻 Authors
 
-**Muhammad Aryan Afzal**
-🎓 University of Engineering and Technology (UET), Taxila
-🔗 GitHub: ](https://github.com/AryanAfzal2906)
+**Aryan Afzal** — AI & Backend Lead
+🎓 UET Taxila (22-CS-89)
+🔗 GitHub: [@AryanAfzal2906](https://github.com/AryanAfzal2906)
 📧 Email: <afzalaryan2003@gmail.com>
-💼 LinkedIn: (https://www.linkedin.com/in/your-profile)
+💼 LinkedIn: (https://www.linkedin.com/in/aryan-afzal-316926369)
+
+**Malik Anas Ahmed** — Mobile Application Lead
+🎓 UET Taxila (22-CS-150)
+📧 anasahmed.appdev@gmail.com
+🔗 [LinkedIn](https://www.linkedin.com/in/malikanasahmed)
 
 ---
 
