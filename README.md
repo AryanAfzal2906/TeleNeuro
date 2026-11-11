@@ -1,7 +1,8 @@
 # 🧠 TeleNeuro
 
 <p align="center">
-  <b>AI-Powered Telemedicine Platform for Early Alzheimer's Detection</b>
+  <b>AI-Powered Telemedicine Platform for Early Alzheimer's Detection</b><br/>
+  <i>Final Year Project (FYP) — University of Engineering and Technology, Taxila</i>
 </p>
 
 <p align="center">
@@ -10,6 +11,7 @@
   <img src="https://img.shields.io/badge/Supabase-Storage-3ECF8E?logo=supabase&logoColor=white" />
   <img src="https://img.shields.io/badge/AI%20Model-ViT--B%2F16-orange" />
   <img src="https://img.shields.io/badge/Platform-Android-3DDC84?logo=android&logoColor=white" />
+  <img src="https://img.shields.io/badge/Project-FYP-blueviolet" />
   <img src="https://img.shields.io/badge/License-MIT-green" />
 </p>
 
@@ -22,6 +24,8 @@
 The app runs a fine-tuned **Vision Transformer (ViT-B/16)** model — converted to TFLite and bundled directly into the app — so MRI classification happens **entirely on-device**, without sending medical images to any external inference server.
 
 Patients can upload an MRI scan, receive an instant AI-generated diagnosis report (PDF), book appointments with doctors, chat in real time, and securely share their reports — all within one app.
+
+This project was developed as my **Final Year Project (FYP)** at the **University of Engineering and Technology (UET), Taxila**.
 
 ---
 
@@ -59,8 +63,6 @@ Patients can upload an MRI scan, receive an instant AI-generated diagnosis repor
 
 ## 📸 Screenshots
 
-<!-- Replace the paths below with your actual screenshot files, e.g. docs/screenshots/xyz.png -->
-
 | Patient Dashboard | MRI Reports | Appointments |
 |:---:|:---:|:---:|
 | <img width="720" height="1600" alt="patient_dashboard" src="https://github.com/user-attachments/assets/e080490f-6c75-419e-91db-5a8c7b3b6280" /> | <img width="720" height="1600" alt="Reports" src="https://github.com/user-attachments/assets/d52293f2-6f84-4055-96b2-4eda3eb73b47" /> | <img width="720" height="1600" alt="Appointments" src="https://github.com/user-attachments/assets/976fe406-76fa-4b53-bb63-7a609427aa40" /> |
@@ -68,7 +70,6 @@ Patients can upload an MRI scan, receive an instant AI-generated diagnosis repor
 | Doctor Dashboard | Doctor Profile | User Guide |
 |:---:|:---:|:---:|
 | <img width="720" height="1600" alt="doctor_dashboard" src="https://github.com/user-attachments/assets/e186770d-218d-4e5b-bc04-e49d1aa5920b" /> | <img width="720" height="1600" alt="doctor_profile" src="https://github.com/user-attachments/assets/8404a1ed-0edf-4494-92da-3cf95df4dcba" /> | <img width="720" height="1600" alt="user_guide" src="https://github.com/user-attachments/assets/f7b59a0b-f0b0-4b5f-9f00-ac6fbe145afa" /> |
-
 
 ---
 
@@ -142,7 +143,7 @@ assets/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/<your-username>/teleneuro.git
+git clone https://github.com/AryanAfzal2906/teleneuro.git
 cd teleneuro
 ```
 
@@ -155,7 +156,7 @@ flutter pub get
 - Create a Firebase project → enable **Email/Password Auth** and **Firestore**.
 - Run:
 ```bash
-  flutterfire configure
+flutterfire configure
 ```
   This regenerates `lib/firebase_options.dart` and `android/app/google-services.json` for your own project.
 
@@ -165,9 +166,9 @@ flutter pub get
 - Run the SQL policies in [`supabase_mri_reports_storage.sql`](./supabase_mri_reports_storage.sql) inside the Supabase SQL Editor.
 - Update `lib/supabase_config.dart` with your own Project URL and anon key:
 ```dart
-  static const String supabaseUrl = 'YOUR_SUPABASE_URL';
-  static const String supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
-  static const String supabaseBucket = 'mri-reports';
+static const String supabaseUrl = 'YOUR_SUPABASE_URL';
+static const String supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
+static const String supabaseBucket = 'mri-reports';
 ```
 
 ### 5. ⚠️ AI Model Setup (required — not included in this repo)
@@ -175,14 +176,14 @@ flutter pub get
 The `.tflite` model file is **too large for a normal Git push** (GitHub blocks files over 100MB), so it is hosted separately instead of being committed to this repository.
 
 **Steps to set it up:**
-1. Download the model file from:*(GitHub Release)*
+1. Download the model file from the [GitHub Releases page](https://github.com/AryanAfzal2906/teleneuro/releases).
 2. Place the downloaded file at:
-assets/vit_fyp_direct.tflite
+   `assets/vit_fyp_direct.tflite`
 3. Confirm it's registered in `pubspec.yaml` (already included in this repo):
 ```yaml
-   flutter:
-     assets:
-       - assets/vit_fyp_direct.tflite
+flutter:
+  assets:
+    - assets/vit_fyp_direct.tflite
 ```
 4. Run `flutter pub get` again, then rebuild the app.
 
@@ -202,7 +203,11 @@ flutter run
 
 ---
 
+## ⚠️ Disclaimer
 
+TeleNeuro is an academic project. Its AI predictions are intended for research and educational purposes only and are **not** a substitute for professional medical diagnosis. Always consult a qualified neurologist.
+
+---
 
 ## 📜 License
 
@@ -212,9 +217,11 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ## 👨‍💻 Author
 
-**Malik Anas Ahmed**
-📧 anasahmed.appdev@gmail.com
-🔗 [LinkedIn](https://www.linkedin.com/in/malikanasahmed)
+**Muhammad Aryan Afzal**
+🎓 University of Engineering and Technology (UET), Taxila
+🔗 GitHub: ](https://github.com/AryanAfzal2906)
+📧 Email: <afzalaryan2003@gmail.com>
+💼 LinkedIn: (https://www.linkedin.com/in/your-profile)
 
 ---
 
